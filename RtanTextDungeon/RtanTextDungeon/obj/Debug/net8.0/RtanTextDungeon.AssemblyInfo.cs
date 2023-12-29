@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("RtanTextDungeon")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+22dd4d82732279df1a26aa50f76c37b60f40c133")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+49044bf995a3c578af3cf68aef9c26bc21abe5ad")]
 [assembly: System.Reflection.AssemblyProductAttribute("RtanTextDungeon")]
 [assembly: System.Reflection.AssemblyTitleAttribute("RtanTextDungeon")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
