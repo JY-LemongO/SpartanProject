@@ -21,7 +21,7 @@
             public int gold;
         }
 
-        static void CharacterCreate(ref Player player)
+        static void CharacterCreate(out Player player)
         {
             player.lv = 1;
             player.name = "십칠조";
@@ -188,8 +188,8 @@
 
         static void Main(string[] args)
         {
-            Player player = new Player();
-            CharacterCreate(ref player);
+            Player player;
+            CharacterCreate(out player);
 
             SelectAction(ref player);
         }
