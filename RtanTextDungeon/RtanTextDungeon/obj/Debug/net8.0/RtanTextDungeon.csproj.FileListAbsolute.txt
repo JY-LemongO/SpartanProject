@@ -1,0 +1,15 @@
+C:\Users\User\Documents\GitHub\SpatranProject\RtanTextDungeon\RtanTextDungeon\bin\Debug\net8.0\RtanTextDungeon.exe
+C:\Users\User\Documents\GitHub\SpatranProject\RtanTextDungeon\RtanTextDungeon\bin\Debug\net8.0\RtanTextDungeon.deps.json
+C:\Users\User\Documents\GitHub\SpatranProject\RtanTextDungeon\RtanTextDungeon\bin\Debug\net8.0\RtanTextDungeon.runtimeconfig.json
+C:\Users\User\Documents\GitHub\SpatranProject\RtanTextDungeon\RtanTextDungeon\bin\Debug\net8.0\RtanTextDungeon.dll
+C:\Users\User\Documents\GitHub\SpatranProject\RtanTextDungeon\RtanTextDungeon\bin\Debug\net8.0\RtanTextDungeon.pdb
+C:\Users\User\Documents\GitHub\SpatranProject\RtanTextDungeon\RtanTextDungeon\obj\Debug\net8.0\RtanTextDungeon.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\User\Documents\GitHub\SpatranProject\RtanTextDungeon\RtanTextDungeon\obj\Debug\net8.0\RtanTextDungeon.AssemblyInfoInputs.cache
+C:\Users\User\Documents\GitHub\SpatranProject\RtanTextDungeon\RtanTextDungeon\obj\Debug\net8.0\RtanTextDungeon.AssemblyInfo.cs
+C:\Users\User\Documents\GitHub\SpatranProject\RtanTextDungeon\RtanTextDungeon\obj\Debug\net8.0\RtanTextDungeon.csproj.CoreCompileInputs.cache
+C:\Users\User\Documents\GitHub\SpatranProject\RtanTextDungeon\RtanTextDungeon\obj\Debug\net8.0\RtanTextDungeon.sourcelink.json
+C:\Users\User\Documents\GitHub\SpatranProject\RtanTextDungeon\RtanTextDungeon\obj\Debug\net8.0\RtanTextDungeon.dll
+C:\Users\User\Documents\GitHub\SpatranProject\RtanTextDungeon\RtanTextDungeon\obj\Debug\net8.0\refint\RtanTextDungeon.dll
+C:\Users\User\Documents\GitHub\SpatranProject\RtanTextDungeon\RtanTextDungeon\obj\Debug\net8.0\RtanTextDungeon.pdb
+C:\Users\User\Documents\GitHub\SpatranProject\RtanTextDungeon\RtanTextDungeon\obj\Debug\net8.0\RtanTextDungeon.genruntimeconfig.cache
+C:\Users\User\Documents\GitHub\SpatranProject\RtanTextDungeon\RtanTextDungeon\obj\Debug\net8.0\ref\RtanTextDungeon.dll
