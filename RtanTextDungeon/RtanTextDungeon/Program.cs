@@ -1,6 +1,4 @@
-﻿using System.Numerics;
-
-namespace RtanTextDungeon
+﻿namespace RtanTextDungeon
 {
     public enum PlayerClass
     {
@@ -173,7 +171,7 @@ namespace RtanTextDungeon
                         return;
                     case "2":
                         Console.Clear();
-                        Shop(ref player);
+                        Inventory(ref player);
                         return;
                     case "3":
                         Console.Clear();
