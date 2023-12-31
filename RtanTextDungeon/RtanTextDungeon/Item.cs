@@ -3,16 +3,53 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace RtanTextDungeon
 {
     internal class Item
     {
-        public string name;
+        public string   Name            { get; protected set; }
+        public string   AdditionalValue { get; protected set; }
+        public string   AbilityName     { get; }
+        public string   Desc            { get; }        
+        public int      Price           { get; }
+        public bool     IsEquip         { get; protected set; } = false;
+        public bool     IsBuy           { get; protected set; } = false;
 
-        public virtual void EquipItem(Player player) { }
-        public virtual void UnequipItem(Player player) { }        
+        public Item(string name, string abilityName, string desc, int price)
+        {
+            Name = name;
+            AbilityName = abilityName;
+            Desc = desc;
+            Price = price;
+        }
+
+        public void Buy(Player player)
+        {
+            IsBuy = true;
+            player.items.Add(this);
+        }
+
+        public void Sell(Player player)
+        {            
+            IsBuy = false;
+            if (IsEquip)
+                player.EquipOrUnequipItem(this);
+            player.items.Remove(this);
+        }
+
+        public virtual void EquipItem(Player player) 
+        {
+            Name = "[E]" + Name;
+            IsEquip = true;
+        }
+        public virtual void UnequipItem(Player player) 
+        {
+            string subString = "[E]";
+            IsEquip = false;
+            int index = Name.IndexOf(subString);
+            Name = Name.Remove(index, subString.Length);
+        }          
     }
 
     class Weapon : Item
@@ -21,19 +58,19 @@ namespace RtanTextDungeon
 
         public override void EquipItem(Player player)
         {
-            player.weapon = this;
             player.atk += damage;
+            AdditionalValue = $"(+{damage})";
+            base.EquipItem(player);
         } 
-
         public override void UnequipItem(Player player)
         {
-            player.weapon = null;
             player.atk -= damage;
+            AdditionalValue = $"";
+            base.UnequipItem(player);
         }
 
-        public Weapon(int damage, string name)
-        {
-            this.name = name;
+        public Weapon(string name, string desc, int price, int damage) : base(name, "공격력", desc, price)
+        {           
             this.damage = damage;
         }
     }
@@ -43,19 +80,19 @@ namespace RtanTextDungeon
         public int defense;
         public override void EquipItem(Player player)
         {
-            player.armor = this;
             player.def += defense;
+            AdditionalValue = $"(+{defense})";
+            base.EquipItem(player);
         }
-        
         public override void UnequipItem(Player player)
         {
-            player.armor = null;
             player.def -= defense;
-        }        
+            AdditionalValue = $"";
+            base.UnequipItem(player);
+        }
 
-        public Armor(int defense, string name)
+        public Armor(string name, string desc, int price, int defense) : base(name, "방어력", desc, price)
         {
-            this.name = name;
             this.defense = defense;
         }
     }
