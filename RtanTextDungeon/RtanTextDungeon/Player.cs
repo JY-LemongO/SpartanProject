@@ -30,6 +30,8 @@ namespace RtanTextDungeon
             gold = 1500;
         }
 
+        public void BuyOrSell(int price) => gold += price;
+
         public void EquipOrUnequipItem(Item item)
         {
             Console.WriteLine("뭔가 장착,장착해제 했음");

@@ -26,8 +26,12 @@ namespace RtanTextDungeon
 
         public void Buy(Player player)
         {
+            if (player.gold - Price < 0)
+                return;
+
             IsBuy = true;
             player.items.Add(this);
+            player.BuyOrSell(-Price);
         }
 
         public void Sell(Player player)
@@ -36,6 +40,7 @@ namespace RtanTextDungeon
             if (IsEquip)
                 player.EquipOrUnequipItem(this);
             player.items.Remove(this);
+            player.BuyOrSell((int)(Price * 0.85f));
         }
 
         public virtual void EquipItem(Player player) 
