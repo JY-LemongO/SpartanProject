@@ -21,5 +21,12 @@ namespace RtanTextDungeon
             Weapon,
             Armor,
         }
+
+        public enum DungeonDiff
+        {
+            Easy,
+            Normal,
+            Hard,
+        }
     }
 }

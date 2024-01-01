@@ -14,6 +14,7 @@ namespace RtanTextDungeon
         public int atk;
         public int def;
         public int hp;
+        public int maxHp;
         public int gold;
         
         public Dictionary<Type, Item> equippedItems = new Dictionary<Type, Item>();
@@ -27,6 +28,7 @@ namespace RtanTextDungeon
             atk = 10;
             def = 5;
             hp = 100;
+            maxHp = 100;
             gold = 1500;
         }
 
