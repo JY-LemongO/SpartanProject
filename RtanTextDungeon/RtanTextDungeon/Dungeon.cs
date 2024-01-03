@@ -103,12 +103,12 @@ namespace RtanTextDungeon
                 Console.ResetColor();
 
                 Console.WriteLine("-------------------------------------------\n");
-                Console.WriteLine($"Lv. {player.lv.ToString("00")}\n" +
-                                $"이름\t:  {player.name}({player.m_class})\n\n" +
-                                $"공격력\t:  {player.atk} {weaponStatus}\n" +
-                                $"방어력\t:  {player.def} {armorStatus}\n" +
-                                $"체 력\t:  {player.hp}\n" +
-                                $"Gold\t:  {player.gold:N0} G\n");
+                Console.WriteLine($"Lv. {player.Lv.ToString("00")}\n" +
+                                $"이름\t:  {player.Name}({player.m_Class})\n\n" +
+                                $"공격력\t:  {player.Atk} {weaponStatus}\n" +
+                                $"방어력\t:  {player.Def} {armorStatus}\n" +
+                                $"체 력\t:  {player.Hp}\n" +
+                                $"Gold\t:  {player.Gold:N0} G\n");
                 Console.WriteLine("-------------------------------------------\n");
 
                 Console.WriteLine("(I) : [인벤토리]\n\n(S) : [상점]\n\n(B) : [마을로 돌아가기]\n\n");
@@ -251,7 +251,7 @@ namespace RtanTextDungeon
                 Console.WriteLine("[보유 골드]");
                 Console.ResetColor();
                 Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.WriteLine($"{player.gold:N0} G\n");
+                Console.WriteLine($"{player.Gold:N0} G\n");
                 Console.ResetColor();
 
                 Console.WriteLine("[아이템 목록]");
@@ -350,11 +350,11 @@ namespace RtanTextDungeon
                 else
                 {
                     Console.WriteLine("(E) : ▼ 내 정보");
-                    Console.WriteLine($"{player.name} Lv. {player.lv.ToString("00")}\n\n" +
-                                $"공격력\t:  {player.atk}\n" +
-                                $"방어력\t:  {player.def}\n" +
-                                $"체 력\t:  {player.hp}\n" +
-                                $"Gold\t:  {player.gold:N0} G\n");
+                    Console.WriteLine($"{player.Name} Lv. {player.Lv.ToString("00")}\n\n" +
+                                $"공격력\t:  {player.Atk}\n" +
+                                $"방어력\t:  {player.Def}\n" +
+                                $"체 력\t:  {player.Hp}\n" +
+                                $"Gold\t:  {player.Gold:N0} G\n");
                 }
                 Console.ResetColor();
                 Console.WriteLine("=================================\n");
@@ -416,36 +416,43 @@ namespace RtanTextDungeon
             Console.WriteLine("|_____/ |_____||__|__||___  ||_____||_____||__|__|");
             Console.WriteLine("                      |_____|                     \n\n");
 
-            int[] recommendDEF = { 10, 25, 70 };
-            int[] rewards = { 500, 1500, 2500 };
+            int[] recommendDEF = [ 10, 25, 70 ];
+            int[] rewards = [ 500, 1500, 2500 ];
+            int[] exp = [300, 15, 50];
             string[] difficulties = { "쉬움", "보통", "어려움" };
 
             int randomDamage = new Random().Next(20, 36);
-            float randomAdditionalGold = 1 + new Random().Next(player.atk, player.atk * 2 + 1) * 0.01f;
+            float randomAdditionalGold = 1 + new Random().Next(player.Atk, player.Atk * 2 + 1) * 0.01f;
 
-            int getDamage = (randomDamage + (recommendDEF[(int)diff] - player.def)) < 0 ? 0 : (randomDamage + (recommendDEF[(int)diff] - player.def));
+            int getDamage = (randomDamage + (recommendDEF[(int)diff] - player.Def)) < 0 ? 0 : (randomDamage + (recommendDEF[(int)diff] - player.Def));
             int getGold = (int)(rewards[(int)diff] * randomAdditionalGold);
+            int getEXP = exp[(int)diff];
             int fail = new Random().Next(0, 10);
 
             Console.WriteLine("-------------------------------------------\n");
-            if (player.def < recommendDEF[(int)diff] && fail < 4)
+            if (player.Def < recommendDEF[(int)diff] && fail < 4)
             {
                 // 실패 시 보상x 받는 데미지 절반
-                player.hp -= getDamage / 2;
+                player.GetDamage(getDamage / 2);
                 Console.WriteLine("던전 클리어에 실패했습니다!\n");
                 Console.WriteLine("[탐험 결과]");
-                Console.WriteLine($"체력 : {player.maxHp} -> {player.hp}\n");
+                Console.WriteLine($"체력 : {player.MaxHp} -> {player.Hp}\n");
             }
             else
             {
-                int prevGold = player.gold;
-                player.hp -= getDamage;
-                player.gold += getGold;
+                int prevGold = player.Gold;
+                player.GetDamage(getDamage);
+                player.GetGold(getGold);                
                 Console.WriteLine("축하합니다!");
                 Console.WriteLine($"[{difficulties[(int)diff]}] 던전을 클리어 했습니다!\n");
                 Console.WriteLine("[탐험 결과]");
-                Console.WriteLine($"체력 : {player.maxHp} -> {player.hp}");
-                Console.WriteLine($"Gold : {prevGold} -> {player.gold}\n");
+                Console.WriteLine($"체력 : {player.MaxHp} -> {player.Hp}");                
+                Console.WriteLine($"Gold : {prevGold} -> {player.Gold}\n");
+                Console.WriteLine($"경험치를 {getEXP} 획득했습니다.\n");
+
+                int lv = player.Lv;
+                if (player.IsLevelUp(getEXP))
+                    Console.WriteLine($"LevelUp!  Lv. {lv:00} -> {player.Lv:00}\n");
             }
             Console.WriteLine("-------------------------------------------\n");
 
@@ -477,7 +484,7 @@ namespace RtanTextDungeon
         private void Rest(Player player)
         {
             bool rest = false;
-            bool fullCondition = player.hp == player.maxHp;
+            bool fullCondition = player.Hp == player.MaxHp;
             while (true)
             {
                 Console.WriteLine(" __               ");
@@ -490,7 +497,7 @@ namespace RtanTextDungeon
                 Console.ResetColor();
                 Console.WriteLine("-------------------------------------------\n");
 
-                Console.WriteLine($"500 G 를 지불하시면 체력을 회복할 수 있습니다. (보유골드 : {player.gold} G)\n");
+                Console.WriteLine($"500 G 를 지불하시면 체력을 회복할 수 있습니다. (보유골드 : {player.Gold} G)\n");
                 if (rest)
                 {
                     if (fullCondition)
@@ -526,8 +533,8 @@ namespace RtanTextDungeon
                         rest = true;
                         if (!fullCondition)
                         {
-                            player.hp = player.maxHp;
-                            player.gold -= 500;
+                            player.Rest();
+                            player.GetGold(-500);
                         }
                         break;
                     case "B":

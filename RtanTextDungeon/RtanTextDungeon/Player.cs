@@ -8,36 +8,37 @@ namespace RtanTextDungeon
 {
     internal class Player
     {
-        public int lv;
-        public string name;
-        public Define.PlayerClass m_class;
-        public int atk;
-        public int def;
-        public int hp;
-        public int maxHp;
-        public int gold;
-        
+        public int Lv                       { get; private set; }
+        public string Name                  { get; private set; }
+        public Define.PlayerClass m_Class   { get; private set; }
+        public int Atk                      { get; set; }
+        public int Def                      { get; set; }
+        public int Hp                       { get; private set; }
+        public int MaxHp                    { get; private set; }
+        public int Gold                     { get; private set; }
+        public int EXP                      { get; private set; }
+
         public Dictionary<Type, Item> equippedItems = new Dictionary<Type, Item>();
         public List<Item> items = new List<Item>();
 
+        private int needEXP = 10;
+
         public Player(Define.PlayerClass playerClass)
         {
-            lv = 1;
-            name = "르탄이";
-            m_class = playerClass;
-            atk = 10;
-            def = 5;
-            hp = 100;
-            maxHp = 100;
-            gold = 1500;
+            Lv = 1;
+            Name = "르탄이";
+            m_Class = playerClass;
+            Atk = 10;
+            Def = 5;
+            Hp = 100;
+            MaxHp = 100;
+            Gold = 1500;
         }
 
-        public void BuyOrSell(int price) => gold += price;
+        public void BuyOrSell(int price) => Gold += price;
 
         public void EquipOrUnequipItem(Item item)
         {
-            Console.WriteLine("뭔가 장착,장착해제 했음");
-
             // item의 Type이(Weapon or Armor) 이미 있을 때 = 뭔가 장착 중일 때
             if (equippedItems.ContainsKey(item.GetType()))
             {
@@ -69,6 +70,39 @@ namespace RtanTextDungeon
             Item equippedItem = equippedItems[item.GetType()];
             equippedItem.UnequipItem(this);
             equippedItems.Remove(item.GetType());
+        }
+
+        public void GetGold(int gold) => Gold += gold;
+
+        public void Rest() => Hp = MaxHp;
+
+        public void GetDamage(int damage)
+        {
+            Hp -= damage;
+            if(Hp < 0)
+                Hp = 0;
+        }        
+
+        public bool IsLevelUp(int exp)
+        {
+            EXP += exp;
+            if(EXP >= needEXP)
+            {
+                LevelUp();
+                int remainExp = EXP - needEXP;
+                needEXP *= 2;
+                EXP = 0;
+                IsLevelUp(remainExp);
+                return true;
+            }
+            return false;
+        }
+
+        private void LevelUp()
+        {
+            Lv++;
+            Atk += 3;
+            Def += 1;            
         }
     }
 }

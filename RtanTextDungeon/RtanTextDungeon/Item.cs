@@ -26,7 +26,7 @@ namespace RtanTextDungeon
 
         public void Buy(Player player)
         {
-            if (player.gold - Price < 0)
+            if (player.Gold - Price < 0)
                 return;
 
             IsBuy = true;
@@ -63,13 +63,13 @@ namespace RtanTextDungeon
 
         public override void EquipItem(Player player)
         {
-            player.atk += damage;
+            player.Atk += damage;
             AdditionalValue = $"(+{damage})";
             base.EquipItem(player);
         } 
         public override void UnequipItem(Player player)
         {
-            player.atk -= damage;
+            player.Atk -= damage;
             AdditionalValue = $"";
             base.UnequipItem(player);
         }
@@ -85,13 +85,13 @@ namespace RtanTextDungeon
         public int defense;
         public override void EquipItem(Player player)
         {
-            player.def += defense;
+            player.Def += defense;
             AdditionalValue = $"(+{defense})";
             base.EquipItem(player);
         }
         public override void UnequipItem(Player player)
         {
-            player.def -= defense;
+            player.Def -= defense;
             AdditionalValue = $"";
             base.UnequipItem(player);
         }
