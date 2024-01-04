@@ -20,6 +20,7 @@ namespace RtanTextDungeon
         {
             Weapon,
             Armor,
+            Amulet,
         }
 
         public enum DungeonDiff

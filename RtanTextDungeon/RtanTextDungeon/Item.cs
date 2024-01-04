@@ -8,47 +8,36 @@ namespace RtanTextDungeon
 {
     internal class Item
     {
+        public int      ID              { get; protected set; }        
         public string   Name            { get; protected set; }
-        public string   AdditionalValue { get; protected set; }
+        public string   AdditionalATK   { get; protected set; }
+        public string   AdditionalDEF   { get; protected set; }        
         public string   AbilityName     { get; }
         public string   Desc            { get; }        
         public int      Price           { get; }
         public bool     IsEquip         { get; protected set; } = false;
         public bool     IsBuy           { get; protected set; } = false;
 
-        public Item(string name, string abilityName, string desc, int price)
+        public Item(int id, string name, string abilityName, string desc, int price)
         {
+            ID = id;
             Name = name;
             AbilityName = abilityName;
             Desc = desc;
-            Price = price;
+            Price = price;            
         }
 
-        public void Buy(Player player)
-        {
-            if (player.Gold - Price < 0)
-                return;
+        public void GetItem() => IsBuy = true;
 
-            IsBuy = true;
-            player.items.Add(this);
-            player.BuyOrSell(-Price);
-        }
+        public void RemoveItem() => IsBuy = false;
 
-        public void Sell(Player player)
+        public virtual void EquipItem()
         {            
-            IsBuy = false;
-            if (IsEquip)
-                player.EquipOrUnequipItem(this);
-            player.items.Remove(this);
-            player.BuyOrSell((int)(Price * 0.85f));
-        }
-
-        public virtual void EquipItem(Player player) 
-        {
             Name = "[E]" + Name;
             IsEquip = true;
         }
-        public virtual void UnequipItem(Player player) 
+
+        public virtual void UnequipItem() 
         {
             string subString = "[E]";
             IsEquip = false;
@@ -59,45 +48,66 @@ namespace RtanTextDungeon
 
     class Weapon : Item
     {
-        public int damage;
+        public int damage { get; private set; }
 
-        public override void EquipItem(Player player)
-        {
-            player.Atk += damage;
-            AdditionalValue = $"(+{damage})";
-            base.EquipItem(player);
+        public override void EquipItem()
+        {            
+            AdditionalATK = $"(+{damage})";
+            base.EquipItem();
         } 
-        public override void UnequipItem(Player player)
+        public override void UnequipItem()
         {
-            player.Atk -= damage;
-            AdditionalValue = $"";
-            base.UnequipItem(player);
+            AdditionalATK = $"";
+            base.UnequipItem();
         }
 
-        public Weapon(string name, string desc, int price, int damage) : base(name, "공격력", desc, price)
+        public Weapon(int id, string name, string desc, int price, int damage) : base(id, name, "공격력", desc, price)
         {           
-            this.damage = damage;
+            this.damage = damage;            
         }
     }
 
     class Armor : Item
     {
-        public int defense;
-        public override void EquipItem(Player player)
-        {
-            player.Def += defense;
-            AdditionalValue = $"(+{defense})";
-            base.EquipItem(player);
+        public int defense { get; private set; }
+        public override void EquipItem()
+        {            
+            AdditionalDEF = $"(+{defense})";
+            base.EquipItem();
         }
-        public override void UnequipItem(Player player)
+        public override void UnequipItem()
         {
-            player.Def -= defense;
-            AdditionalValue = $"";
-            base.UnequipItem(player);
+            AdditionalDEF = $"";
+            base.UnequipItem();
         }
 
-        public Armor(string name, string desc, int price, int defense) : base(name, "방어력", desc, price)
+        public Armor(int id, string name, string desc, int price, int defense) : base(id, name, "방어력", desc, price)
         {
+            this.defense = defense;            
+        }
+    }
+
+    class Amulet : Item
+    {
+        public int damage { get; private set; }
+        public int defense { get; private set; }
+
+        public override void EquipItem()
+        {
+            AdditionalATK = $"(+{damage})";
+            AdditionalDEF = $"(+{defense})";
+            base.EquipItem();
+        }
+        public override void UnequipItem()
+        {
+            AdditionalATK = $"";
+            AdditionalDEF = $"";
+            base.UnequipItem();
+        }
+
+        public Amulet(int id, string name, string desc, int price, int damage, int defense) : base(id, name, "공격력", desc, price)
+        {
+            this.damage = damage;
             this.defense = defense;
         }
     }

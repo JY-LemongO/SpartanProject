@@ -88,8 +88,8 @@ namespace RtanTextDungeon
         #region 상태창
         private void Status(Player player)
         {
-            string weaponStatus = player.equippedItems.ContainsKey(typeof(Weapon)) ? player.equippedItems[typeof(Weapon)].AdditionalValue : "";
-            string armorStatus = player.equippedItems.ContainsKey(typeof(Armor)) ? player.equippedItems[typeof(Armor)].AdditionalValue : "";
+            string weaponStatus = player.equippedItems.ContainsKey(typeof(Weapon)) ? player.equippedItems[typeof(Weapon)].AdditionalATK : "";
+            string armorStatus = player.equippedItems.ContainsKey(typeof(Armor)) ? player.equippedItems[typeof(Armor)].AdditionalDEF : "";
 
             while (true)
             {
@@ -309,9 +309,9 @@ namespace RtanTextDungeon
                         {
                             itemIndex--;
                             if (!shop.items[itemIndex].IsBuy)
-                                shop.items[itemIndex].Buy(player);
+                                shop.Buy(player, shop.items[itemIndex]);
                             else
-                                shop.items[itemIndex].Sell(player);
+                                shop.Sell(player, shop.items[itemIndex]);
                         }
                         else
                         {
