@@ -105,7 +105,7 @@ namespace RtanTextDungeon
             base.UnequipItem();
         }
 
-        public Amulet(int id, string name, string desc, int price, int damage, int defense) : base(id, name, "공격력", desc, price)
+        public Amulet(int id, string name, string desc, int price, int damage, int defense) : base(id, name, "공격력/방어력", desc, price)
         {
             this.damage = damage;
             this.defense = defense;

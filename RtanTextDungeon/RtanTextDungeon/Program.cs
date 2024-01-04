@@ -8,15 +8,20 @@ namespace RtanTextDungeon
     internal class Program
     {
         static void Main(string[] args)
-        {            
+        {
+            Console.WindowWidth = 200;
+            Console.WindowHeight = 60;
+
+
+
             // 저장할 폴더의 위치
             string saveFolderName = "C:\\Users\\User\\Documents\\GitHub\\SpatranProject";            
 
             // 아이템 상점에 쓰일 Shop 클래스
             Shop shop = new Shop();
             // 플레이어를 불러오기를 통해 생성한다.
-            Player player = LoadPlayer(saveFolderName, shop);
             Console.WriteLine("데이터를 불러오는중...");
+            Player player = LoadPlayer(saveFolderName, shop);            
             Thread.Sleep(1000);
 
             // 인 게임 Dungeon클래스
@@ -69,9 +74,12 @@ namespace RtanTextDungeon
                 LoadPlayerItemsInfo(loadedPlayer, shop);
 
                 return loadedPlayer;
-            }            
+            }
             else
-                return new Player(1, "르탄이", Define.PlayerClass.Worrior, 10, 5, 100, 100, 1500);
+            {
+                Console.WriteLine("데이터가 없습니다.");
+                return new Player(1, "르탄이", Define.PlayerClass.Worrior, 10, 5, 100, 100, 50000);
+            }                
         }
         
         static void LoadPlayerItemsInfo(Player player, Shop shop)
@@ -89,6 +97,7 @@ namespace RtanTextDungeon
 
             string weaponKey = Define.ItemType.Weapon.ToString();
             string armorKey  = Define.ItemType.Armor.ToString();
+            string amuletKey = Define.ItemType.Amulet.ToString();
 
             for (int i = 0; i < player.items.Count; i++)
             {
@@ -98,6 +107,10 @@ namespace RtanTextDungeon
 
                 if (player.equippedItemIndex.ContainsKey(armorKey) && player.items[i] is Armor)
                     if (player.items[i].ID == player.equippedItemIndex[armorKey])
+                        player.EquipOrUnequipItem(player.items[i]);
+
+                if (player.equippedItemIndex.ContainsKey(amuletKey) && player.items[i] is Amulet)
+                    if (player.items[i].ID == player.equippedItemIndex[amuletKey])
                         player.EquipOrUnequipItem(player.items[i]);
             }
         }

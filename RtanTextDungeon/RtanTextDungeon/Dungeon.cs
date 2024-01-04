@@ -89,7 +89,9 @@ namespace RtanTextDungeon
         private void Status(Player player)
         {
             string weaponStatus = player.equippedItems.ContainsKey(typeof(Weapon)) ? player.equippedItems[typeof(Weapon)].AdditionalATK : "";
-            string armorStatus = player.equippedItems.ContainsKey(typeof(Armor)) ? player.equippedItems[typeof(Armor)].AdditionalDEF : "";
+            string armorStatus  = player.equippedItems.ContainsKey(typeof(Armor)) ? player.equippedItems[typeof(Armor)].AdditionalDEF : "";
+            string amuletATK    = player.equippedItems.ContainsKey(typeof(Amulet)) ? player.equippedItems[typeof(Amulet)].AdditionalATK : "";
+            string amuletDEF    = player.equippedItems.ContainsKey(typeof(Amulet)) ? player.equippedItems[typeof(Amulet)].AdditionalDEF : "";
 
             while (true)
             {
@@ -105,8 +107,8 @@ namespace RtanTextDungeon
                 Console.WriteLine("-------------------------------------------\n");
                 Console.WriteLine($"Lv. {player.Lv.ToString("00")}\n" +
                                 $"이름\t:  {player.Name}({player.m_Class})\n\n" +
-                                $"공격력\t:  {player.Atk} {weaponStatus}\n" +
-                                $"방어력\t:  {player.Def} {armorStatus}\n" +
+                                $"공격력\t:  {player.Atk} {weaponStatus + amuletATK}\n" +
+                                $"방어력\t:  {player.Def} {armorStatus + amuletDEF}\n" +
                                 $"체 력\t:  {player.Hp}\n" +
                                 $"Gold\t:  {player.Gold:N0} G\n");
                 Console.WriteLine("-------------------------------------------\n");
@@ -175,9 +177,11 @@ namespace RtanTextDungeon
                     if (item.IsEquip)
                         Console.ForegroundColor = ConsoleColor.Magenta;
                     if (item is Weapon weapon)
-                        Console.WriteLine($"- ({index})  {weapon.Name}\t| {weapon.AbilityName} : +{weapon.damage}\t| {weapon.Desc}");
+                        Console.WriteLine($"- ({index})  {weapon.AbilityName} : +{weapon.damage}\t| {weapon.Name}\t| {weapon.Desc}");
                     else if (item is Armor armor)
-                        Console.WriteLine($"- ({index})  {armor.Name}\t| {armor.AbilityName} : +{armor.defense}\t| {armor.Desc}");
+                        Console.WriteLine($"- ({index})  {armor.AbilityName} : +{armor.defense}\t| {armor.Name}\t| {armor.Desc}");
+                    else if (item is Amulet amulet)
+                        Console.WriteLine($"- ({index})  {amulet.AbilityName} : +{amulet.damage} / +{amulet.defense}\t| {amulet.Name}\t| {amulet.Desc}");
                     Console.ResetColor();
                     index++;
                 }
@@ -218,6 +222,8 @@ namespace RtanTextDungeon
                                 player.EquipOrUnequipItem(weapon);
                             else if (player.items[itemIndex] is Armor armor)
                                 player.EquipOrUnequipItem(armor);
+                            else if (player.items[itemIndex] is Amulet amulet)
+                                player.EquipOrUnequipItem(amulet);
                         }
                         else
                         {
@@ -254,20 +260,22 @@ namespace RtanTextDungeon
                 Console.WriteLine($"{player.Gold:N0} G\n");
                 Console.ResetColor();
 
-                Console.WriteLine("[아이템 목록]");
+                Console.WriteLine("[아이템 목록]\t[능력]\t\t\t\t[가격]\t\t[이름]\t\t[설명]\n");
                 int index = 1;
                 foreach (Item item in shop.items)
                 {
                     if (item.IsBuy)
                     {
                         Console.ForegroundColor = ConsoleColor.Magenta;
-                        Console.WriteLine($"- ({index})\t{item.Name}\t| 구매완료 - 판매가격 : {(int)(item.Price * 0.85f)} G");
+                        Console.WriteLine($"- ({index})\t\t{item.Name}\t| 구매완료 - 판매가격 : {(int)(item.Price * 0.85f)} G\n");
                         Console.ResetColor();
                     }
                     else if (item is Weapon weapon)
-                        Console.WriteLine($"- ({index})\t{weapon.Name}\t| {weapon.AbilityName} : +{weapon.damage}\t| {weapon.Desc}\t| {weapon.Price:N0} G");
+                        Console.WriteLine($"- ({index})\t\t{weapon.AbilityName} : +{weapon.damage}\t\t\t| {weapon.Price:N0} G\t| {weapon.Name}\t| {weapon.Desc}\n");
                     else if (item is Armor armor)
-                        Console.WriteLine($"- ({index})\t{armor.Name}\t| {armor.AbilityName} : +{armor.defense}\t| {armor.Desc}\t| {armor.Price:N0} G");
+                        Console.WriteLine($"- ({index})\t\t{armor.AbilityName} : +{armor.defense}\t\t\t| {armor.Price:N0} G\t| {armor.Name}\t| {armor.Desc}\n");
+                    else if (item is Amulet amulet)
+                        Console.WriteLine($"- ({index})\t\t{amulet.AbilityName} : +{amulet.damage} / +{amulet.defense}\t| {amulet.Price:N0} G\t| {amulet.Name}\t| {amulet.Desc}\n");
                     index++;
                 }
 

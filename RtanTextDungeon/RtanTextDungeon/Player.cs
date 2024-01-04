@@ -54,6 +54,12 @@ namespace RtanTextDungeon
                 Armor equippedArmor = (Armor)armor;
                 Def -= equippedArmor.defense;
             }
+            if (equippedItems.TryGetValue(typeof(Amulet), out var amulet))
+            {
+                Amulet equippedAmulet = (Amulet)amulet;
+                Atk -= equippedAmulet.damage;
+                Def -= equippedAmulet.defense;
+            }
         }
 
         public void BuyOrSell(int price, Item item, bool isSell = false)
@@ -99,15 +105,21 @@ namespace RtanTextDungeon
 
         private void EquipItem(Item item)
         {
-            if (item is Weapon weapon)
+            switch (item)
             {
-                weapon.EquipItem();
-                Atk += weapon.damage;                
-            }
-            else if(item is Armor armor)
-            {
-                armor.EquipItem();
-                Def += armor.defense;
+                case Weapon weapon:
+                    weapon.EquipItem();
+                    Atk += weapon.damage;
+                    break;
+                case Armor armor:
+                    armor.EquipItem();
+                    Def += armor.defense;
+                    break;
+                case Amulet amulet:
+                    amulet.EquipItem();
+                    Atk += amulet.damage;
+                    Def += amulet.defense;
+                    break;
             }
 
             // 불러오기 시 장착중인 아이템이 저장 되어있으면 중복으로 에러발생.
@@ -118,16 +130,23 @@ namespace RtanTextDungeon
 
         private void UnequipItem(Item item)
         {
-            if (item is Weapon weapon)
+            switch (item)
             {
-                weapon.UnequipItem();
-                Atk -= weapon.damage;
+                case Weapon weapon:
+                    weapon.UnequipItem();
+                    Atk -= weapon.damage;
+                    break;
+                case Armor armor:
+                    armor.UnequipItem();
+                    Def -= armor.defense;
+                    break;
+                case Amulet amulet:
+                    amulet.UnequipItem();
+                    Atk -= amulet.damage;
+                    Def -= amulet.defense;
+                    break;
             }
-            else if (item is Armor armor)
-            {
-                armor.UnequipItem();
-                Def -= armor.defense;
-            }
+
             equippedItemIndex.Remove(item.GetType().Name);
             equippedItems.Remove(item.GetType());
         }
