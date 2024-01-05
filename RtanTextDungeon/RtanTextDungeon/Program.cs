@@ -85,7 +85,7 @@ namespace RtanTextDungeon
         static void LoadPlayerItemsInfo(Player player, Shop shop)
         {
             // 이중 for문으로 보유중인 Item의 ID가 상점에 진열된 Item의 ID와 일치하는지 검사.
-            // 일치하면 해당 아이템을 구매상태로 전환. (골드 지불 및 
+            // 일치하면 해당 아이템을 구매상태로 전환.
             for (int i = 0; i < shop.items.Length; i++)
             {
                 for (int j = 0; j < player.hasItems.Count; j++)
