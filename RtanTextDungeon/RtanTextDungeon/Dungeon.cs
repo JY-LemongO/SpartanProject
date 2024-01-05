@@ -117,24 +117,21 @@ namespace RtanTextDungeon
                 Console.ResetColor();
 
                 string input = Console.ReadLine();
+                Console.Clear();
                 switch (input)
                 {
                     case "I":
-                    case "i":
-                        Console.Clear();
+                    case "i":                        
                         Inventory(player);
                         return;
                     case "S":
-                    case "s":
-                        Console.Clear();
+                    case "s":                        
                         Shop(player);
                         return;
                     case "B":
-                    case "b":
-                        Console.Clear();
+                    case "b":                        
                         return;
-                    default:
-                        Console.Clear();
+                    default:                        
                         Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine("!!!잘못된 입력입니다!!!");
                         Console.ResetColor();
@@ -192,25 +189,22 @@ namespace RtanTextDungeon
                 Console.ResetColor();
 
                 string input = Console.ReadLine();
+                Console.Clear();
                 int itemIndex;
                 switch (input)
                 {
                     case "E":
-                    case "e":
-                        Console.Clear();
+                    case "e":                        
                         Status(player);
                         return;
                     case "S":
                     case "s":
-                        Console.Clear();
                         Shop(player);
                         return;
                     case "B":
                     case "b":
-                        Console.Clear();
                         return;
                     default:
-                        Console.Clear();
                         if (int.TryParse(input, out itemIndex) && itemIndex <= player.items.Count && itemIndex > 0)
                         {
                             itemIndex--;
@@ -290,25 +284,22 @@ namespace RtanTextDungeon
                 Console.ResetColor();
 
                 string input = Console.ReadLine();
+                Console.Clear();
                 int itemIndex;
                 switch (input)
                 {
                     case "E":
                     case "e":
-                        Console.Clear();
                         Status(player);
                         return;
                     case "I":
                     case "i":
-                        Console.Clear();
                         Inventory(player);
                         return;
                     case "B":
                     case "b":
-                        Console.Clear();
                         return;
                     default:
-                        Console.Clear();
                         if (int.TryParse(input, out itemIndex) && itemIndex <= shop.items.Length && itemIndex > 0)
                         {
                             itemIndex--;
@@ -383,12 +374,12 @@ namespace RtanTextDungeon
                 Console.ResetColor();
 
                 string input = Console.ReadLine();
+                Console.Clear();
                 switch (input)
                 {
                     case "1":
                     case "2":
                     case "3":
-                        Console.Clear();
                         if (player.Hp > 0)
                         {
                             int inputNum = int.Parse(input);
@@ -399,15 +390,12 @@ namespace RtanTextDungeon
                         break;                        
                     case "E":
                     case "e":
-                        Console.Clear();
                         status = !status;
                         break;
                     case "B":
                     case "b":
-                        Console.Clear();
                         return;
                     default:
-                        Console.Clear();
                         Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine("!!!잘못된 입력입니다!!!");
                         Console.ResetColor();
@@ -552,11 +540,11 @@ namespace RtanTextDungeon
                 Console.ResetColor();
 
                 string input = Console.ReadLine();
+                Console.Clear();
                 switch (input)
                 {
                     case "R":
                     case "r":
-                        Console.Clear();
                         rest = true;
                         if (!fullCondition)
                         {
@@ -566,10 +554,8 @@ namespace RtanTextDungeon
                         break;
                     case "B":
                     case "b":
-                        Console.Clear();
                         return;
                     default:
-                        Console.Clear();
                         Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine("!!!잘못된 입력입니다!!!");
                         Console.ResetColor();
