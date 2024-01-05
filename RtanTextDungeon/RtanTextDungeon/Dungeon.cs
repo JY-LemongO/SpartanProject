@@ -9,6 +9,7 @@ namespace RtanTextDungeon
 {
     internal class Dungeon
     {
+        // 인게임에서 상점 이용에 쓰일 아이템 목록을 가지고 있는 Shop 필드
         private Shop? shop;
 
         #region 게임시작
@@ -41,31 +42,27 @@ namespace RtanTextDungeon
                 Console.ResetColor();
 
                 string input = Console.ReadLine();
+                Console.Clear();
                 switch (input)
                 {
                     case "E":
-                    case "e":
-                        Console.Clear();
+                    case "e":                        
                         Status(player);
                         break;
                     case "I":
                     case "i":
-                        Console.Clear();
                         Inventory(player);
                         break;
                     case "S":
                     case "s":
-                        Console.Clear();
                         Shop(player);
                         break;
                     case "D":
                     case "d":
-                        Console.Clear();
                         DungeonEntrance(player);
                         break;
                     case "R":
                     case "r":
-                        Console.Clear();
                         Rest(player);
                         break;
                     case "X":
@@ -75,7 +72,6 @@ namespace RtanTextDungeon
                         Console.ResetColor();
                         return;
                     default:
-                        Console.Clear();
                         Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine("!!!잘못된 입력입니다!!!");
                         Console.ResetColor();
@@ -88,7 +84,7 @@ namespace RtanTextDungeon
         #region 상태창
         private void Status(Player player)
         {
-            string weaponStatus = player.equippedItems.ContainsKey(typeof(Weapon)) ? player.equippedItems[typeof(Weapon)].AdditionalATK : "";
+            string weaponStatus = player.equippedItems.ContainsKey(typeof(Weapon)) ? $"{player.equippedItems[typeof(Weapon)].AdditionalATK}" : "";
             string armorStatus  = player.equippedItems.ContainsKey(typeof(Armor)) ? player.equippedItems[typeof(Armor)].AdditionalDEF : "";
             string amuletATK    = player.equippedItems.ContainsKey(typeof(Amulet)) ? player.equippedItems[typeof(Amulet)].AdditionalATK : "";
             string amuletDEF    = player.equippedItems.ContainsKey(typeof(Amulet)) ? player.equippedItems[typeof(Amulet)].AdditionalDEF : "";
@@ -337,6 +333,7 @@ namespace RtanTextDungeon
         private void DungeonEntrance(Player player)
         {
             bool status = false;
+            bool hpZero = false;
 
             while (true)
             {
@@ -373,6 +370,11 @@ namespace RtanTextDungeon
                     "(3) : [어려움]\t| 방어력 [70] 이상 권장\n\n" +
                     "(B) : [마을로 돌아가기]\n");
 
+                Console.ForegroundColor = ConsoleColor.DarkRed;
+                if (hpZero)
+                Console.WriteLine("체력이 없습니다. 여관에서 휴식을 취하세요.\n");
+                Console.ResetColor();
+
                 Console.WriteLine("---------------------------------");
 
                 Console.ForegroundColor = ConsoleColor.Cyan;
@@ -384,17 +386,17 @@ namespace RtanTextDungeon
                 switch (input)
                 {
                     case "1":
-                        Console.Clear();
-                        EnterDungeon(player, Define.DungeonDiff.Easy);
-                        break;
                     case "2":
-                        Console.Clear();
-                        EnterDungeon(player, Define.DungeonDiff.Normal);
-                        break;
                     case "3":
                         Console.Clear();
-                        EnterDungeon(player, Define.DungeonDiff.Hard);
-                        break;
+                        if (player.Hp > 0)
+                        {
+                            int inputNum = int.Parse(input);
+                            EnterDungeon(player, (Define.DungeonDiff)(inputNum - 1));
+                        }
+                        else
+                            hpZero = true;
+                        break;                        
                     case "E":
                     case "e":
                         Console.Clear();
@@ -432,6 +434,7 @@ namespace RtanTextDungeon
             int randomDamage = new Random().Next(20, 36);
             float randomAdditionalGold = 1 + new Random().Next(player.Atk, player.Atk * 2 + 1) * 0.01f;
 
+            int prevHp = player.Hp;
             int getDamage = (randomDamage + (recommendDEF[(int)diff] - player.Def)) < 0 ? 0 : (randomDamage + (recommendDEF[(int)diff] - player.Def));
             int getGold = (int)(rewards[(int)diff] * randomAdditionalGold);
             int getEXP = exp[(int)diff];
@@ -442,29 +445,54 @@ namespace RtanTextDungeon
             {
                 // 실패 시 보상x 받는 데미지 절반
                 player.GetDamage(getDamage / 2);
-                Console.WriteLine("던전 클리어에 실패했습니다!\n");
+                Console.WriteLine($"[{difficulties[(int)diff]}] 던전 클리어에 실패했습니다!\n");
                 Console.WriteLine("[탐험 결과]");
-                Console.WriteLine($"체력 : {player.MaxHp} -> {player.Hp}\n");
+                Console.WriteLine($"체력 : {prevHp} -> {player.Hp}\n");
+                if (player.Hp <= 0)
+                    Console.WriteLine("르탄이가 쓰러졌습니다!\n던전 진행이 불가능 합니다. 여관에서 휴식을 취하세요.\n");
             }
             else
             {
-                int prevGold = player.Gold;
+                int prevGold = player.Gold;                
                 player.GetDamage(getDamage);
-                player.GetGold(getGold);                
-                Console.WriteLine("축하합니다!");
-                Console.WriteLine($"[{difficulties[(int)diff]}] 던전을 클리어 했습니다!\n");
-                Console.WriteLine("[탐험 결과]");
-                Console.WriteLine($"체력 : {player.MaxHp} -> {player.Hp}");                
-                Console.WriteLine($"Gold : {prevGold} -> {player.Gold}\n");
-                Console.WriteLine($"경험치를 {getEXP} 획득했습니다.\n");
 
-                int lv = player.Lv;
-                if (player.IsLevelUp(getEXP))
-                    Console.WriteLine($"LevelUp!  Lv. {lv:00} -> {player.Lv:00}\n");
+                if (player.Hp > 0)
+                {
+                    player.GetGold(getGold);
+                    Console.WriteLine("축하합니다!");
+                    Console.WriteLine($"[{difficulties[(int)diff]}] 던전을 클리어 했습니다!\n");
+                    Console.WriteLine("[탐험 결과]");
+                    Console.WriteLine($"체력 : {prevHp} -> {player.Hp}");
+                    Console.WriteLine($"Gold : {prevGold} -> {player.Gold}\n");
+                    Console.WriteLine($"경험치를 {getEXP} 획득했습니다.\n");
+
+                    int lv = player.Lv;
+                    if (player.IsLevelUp(getEXP))
+                        Console.WriteLine($"LevelUp!  Lv. {lv:00} -> {player.Lv:00}\n");
+
+                    Console.WriteLine($"경험치 : {player.EXP} / {player.NeedEXP}");
+                    float progress = (float)player.EXP / player.NeedEXP * 10f;
+                    for (int i = 0; i < 10; i++)
+                    {
+                        if (progress > i)
+                            Console.Write("■");
+                        else
+                            Console.Write("□");
+                    }
+                    Console.WriteLine("\n");
+                }
+                else
+                {
+                    Console.WriteLine("축하합니다!");
+                    Console.WriteLine($"[{difficulties[(int)diff]}] 던전을 클리어 했습니다!\n");
+                    Console.WriteLine("[탐험 결과]");
+                    Console.WriteLine($"체력 : {player.MaxHp} -> {player.Hp}\n");
+                    Console.WriteLine("르탄이가 쓰러졌습니다!\n보상을 얻지 못했습니다.\n\n던전 진행이 불가능 합니다. 여관에서 휴식을 취하세요.\n");
+                }
             }
             Console.WriteLine("-------------------------------------------\n");
 
-            Console.WriteLine("(B) : [나가기]\n");
+            Console.WriteLine("(AnyKey) : [나가기]\n");
 
             Console.ForegroundColor = ConsoleColor.Cyan;
             Console.WriteLine("※※※원하시는 행동을 선택하세요.※※※");
@@ -472,19 +500,7 @@ namespace RtanTextDungeon
             Console.ResetColor();
 
             string input = Console.ReadLine();
-            switch (input)
-            {
-                case "B":
-                case "b":
-                    Console.Clear();
-                    break;
-                default:
-                    Console.Clear();
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("!!!잘못된 입력입니다!!!");
-                    Console.ResetColor();
-                    break;
-            }
+            Console.Clear();
         }
         #endregion
 
@@ -505,7 +521,10 @@ namespace RtanTextDungeon
                 Console.ResetColor();
                 Console.WriteLine("-------------------------------------------\n");
 
-                Console.WriteLine($"500 G 를 지불하시면 체력을 회복할 수 있습니다. (보유골드 : {player.Gold} G)\n");
+                Console.WriteLine($"500 G 를 지불하시면 체력을 회복할 수 있습니다. (보유골드 : {player.Gold} G)");
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine($"[현재 체력 : {player.Hp}]\n");
+                Console.ResetColor();
                 if (rest)
                 {
                     if (fullCondition)

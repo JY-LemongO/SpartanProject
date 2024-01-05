@@ -39,10 +39,10 @@ namespace RtanTextDungeon
 
         public virtual void UnequipItem() 
         {
-            string subString = "[E]";
-            IsEquip = false;
+            string subString = "[E]";            
             int index = Name.IndexOf(subString);
             Name = Name.Remove(index, subString.Length);
+            IsEquip = false;
         }          
     }
 

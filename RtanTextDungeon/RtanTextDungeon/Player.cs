@@ -13,8 +13,8 @@ namespace RtanTextDungeon
         public int Lv                       { get; private set; }
         public string Name                  { get; private set; }        
         public PlayerClass m_Class          { get; private set; }
-        public int Atk                      { get; set; }
-        public int Def                      { get; set; }
+        public int Atk                      { get; private set; }
+        public int Def                      { get; private set; }
         public int Hp                       { get; private set; }
         public int MaxHp                    { get; private set; }
         public int Gold                     { get; private set; }
@@ -28,8 +28,8 @@ namespace RtanTextDungeon
         public Dictionary<string, int>  equippedItemIndex   = new Dictionary<string, int>();
         public List<int>                hasItems            = new List<int>();
 
-        private int needEXP = 10;
-
+        public int NeedEXP { get; private set; } = 10;
+        
         public Player(int Lv, string Name, PlayerClass m_Class, int Atk, int Def, int Hp, int MaxHp, int Gold)
         {
             this.Lv = Lv;
@@ -42,8 +42,10 @@ namespace RtanTextDungeon
             this.Gold = Gold;
         }
 
+        // 저장 전, 현재 장착중인 아이템들의 능력보정 "수치" 만 제거 (장착 상태는 유지)
         public void RemoveItemAbilityBeforeSave()
         {
+            // Type 타입 키에 값이 있으면(아이템 장착 중이면) 해당 아이템 보정수치 제거. 
             if (equippedItems.TryGetValue(typeof(Weapon), out var weapon))
             {
                 Weapon equippedWeapon = (Weapon)weapon;
@@ -61,22 +63,28 @@ namespace RtanTextDungeon
                 Def -= equippedAmulet.defense;
             }
         }
-
+        
         public void BuyOrSell(int price, Item item, bool isSell = false)
-        {
+        {            
             Gold += price;
+            // 구매 시
             if (!isSell)
             {
                 // 불러오기 시 hasItems에 포함된 ID인지 체크없이 Add 하게되면 무한루프에 빠지게된다.
                 if (!hasItems.Contains(item.ID))
+                    // 아이템의 ID를 리스트에 추가
                     hasItems.Add(item.ID);
+                // 플레이어 아이템 리스트에 추가
                 items.Add(item);
             }
             else
             {
+                // 해당 아이템의 ID를 리스트에서 제거
                 hasItems.Remove(item.ID);
+                // 만약 판매하는 아이템이 장착 중이면 장착해제를 먼저 한다.
                 if (item.IsEquip)
                     EquipOrUnequipItem(item);
+                // 플레이어 아이템 리스트에서 제거한다.
                 items.Remove(item);
             }
         }
@@ -105,6 +113,7 @@ namespace RtanTextDungeon
 
         private void EquipItem(Item item)
         {
+            // 아이템 타입의 item 변수가 세부타입 Weapon/Armor/Amulet 에 따라 보정수치 증가
             switch (item)
             {
                 case Weapon weapon:
@@ -122,8 +131,9 @@ namespace RtanTextDungeon
                     break;
             }
 
-            // 불러오기 시 장착중인 아이템이 저장 되어있으면 중복으로 에러발생.
+            // 불러오기 시 장착중인 아이템이 저장 되어있으면 키 중복으로 에러발생.
             if (!equippedItemIndex.ContainsKey(item.GetType().Name))
+                // 장착중인 아이템 인덱스 딕셔너리에 ID 추가 (예 : 키 = "Weapon", 값 = 1)
                 equippedItemIndex.Add(item.GetType().Name, item.ID);
             equippedItems[item.GetType()] = item;            
         }
@@ -162,14 +172,18 @@ namespace RtanTextDungeon
                 Hp = 0;
         }        
 
+        // 레벨업 체크
         public bool IsLevelUp(int exp)
         {
+            // 매개변수로 받은 경험치 만큼 플레이어 경험치 증가.
             EXP += exp;
-            if(EXP >= needEXP)
+            if(EXP >= NeedEXP)
             {
+                // 레벨업에 필요한 경험치 보다 크거나 같으면 레벨업
+                // 레벨업 시 남은 경험치를 매개변수로 재귀호출, 다중레벨업 가능                
                 LevelUp();
-                int remainExp = EXP - needEXP;
-                needEXP *= 2;
+                int remainExp = EXP - NeedEXP;
+                NeedEXP *= 2;
                 EXP = 0;
                 IsLevelUp(remainExp);
                 return true;
@@ -178,7 +192,7 @@ namespace RtanTextDungeon
         }
 
         private void LevelUp()
-        {
+        {            
             Lv++;
             Atk += 3;
             Def += 1;            
