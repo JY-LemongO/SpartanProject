@@ -1,12 +1,12 @@
 {
-  "Lv": 1,
+  "Lv": 2,
   "Name": "르탄이",
   "m_Class": 0,
-  "Atk": 10,
-  "Def": 5,
-  "Hp": 100,
+  "Atk": 13,
+  "Def": 6,
+  "Hp": 52,
   "MaxHp": 100,
-  "Gold": 1500,
+  "Gold": 2275,
   "EXP": 0,
   "NeedEXP": 10
 }

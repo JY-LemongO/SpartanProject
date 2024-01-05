@@ -9,12 +9,16 @@ namespace RtanTextDungeon
 {
     internal class Dungeon
     {
+        // 인게임에서 사용될 Player
+        private Player player;
         // 인게임에서 상점 이용에 쓰일 아이템 목록을 가지고 있는 Shop 필드
-        private Shop? shop;
+        private Shop shop;        
 
         #region 게임시작
         public void EnterGame(Player player, Shop shop)
         {
+            if (this.player == null)
+                this.player = player;
             if (this.shop == null)
                 this.shop = shop;
 
@@ -47,23 +51,23 @@ namespace RtanTextDungeon
                 {
                     case "E":
                     case "e":                        
-                        Status(player);
+                        Status();
                         break;
                     case "I":
                     case "i":
-                        Inventory(player);
+                        Inventory();
                         break;
                     case "S":
                     case "s":
-                        Shop(player);
+                        Shop();
                         break;
                     case "D":
                     case "d":
-                        DungeonEntrance(player);
+                        DungeonEntrance();
                         break;
                     case "R":
                     case "r":
-                        Rest(player);
+                        Rest();
                         break;
                     case "X":
                     case "x":
@@ -82,7 +86,7 @@ namespace RtanTextDungeon
         #endregion
 
         #region 상태창
-        private void Status(Player player)
+        private void Status()
         {
             string weaponStatus = player.equippedItems.ContainsKey(typeof(Weapon)) ? $"{player.equippedItems[typeof(Weapon)].AdditionalATK}" : "";
             string armorStatus  = player.equippedItems.ContainsKey(typeof(Armor)) ? player.equippedItems[typeof(Armor)].AdditionalDEF : "";
@@ -122,11 +126,11 @@ namespace RtanTextDungeon
                 {
                     case "I":
                     case "i":                        
-                        Inventory(player);
+                        Inventory();
                         return;
                     case "S":
                     case "s":                        
-                        Shop(player);
+                        Shop();
                         return;
                     case "B":
                     case "b":                        
@@ -142,7 +146,7 @@ namespace RtanTextDungeon
         #endregion
 
         #region 인벤토리
-        private void Inventory(Player player)
+        private void Inventory()
         {
             while (true)
             {
@@ -195,11 +199,11 @@ namespace RtanTextDungeon
                 {
                     case "E":
                     case "e":                        
-                        Status(player);
+                        Status();
                         return;
                     case "S":
                     case "s":
-                        Shop(player);
+                        Shop();
                         return;
                     case "B":
                     case "b":
@@ -228,7 +232,7 @@ namespace RtanTextDungeon
         #endregion
 
         #region 상점
-        private void Shop(Player player)
+        private void Shop()
         {
             while (true)
             {
@@ -290,11 +294,11 @@ namespace RtanTextDungeon
                 {
                     case "E":
                     case "e":
-                        Status(player);
+                        Status();
                         return;
                     case "I":
                     case "i":
-                        Inventory(player);
+                        Inventory();
                         return;
                     case "B":
                     case "b":
@@ -321,7 +325,7 @@ namespace RtanTextDungeon
         #endregion
 
         #region 던전입구
-        private void DungeonEntrance(Player player)
+        private void DungeonEntrance()
         {
             bool status = false;
             bool hpZero = false;
@@ -493,7 +497,7 @@ namespace RtanTextDungeon
         #endregion
 
         #region 휴식
-        private void Rest(Player player)
+        private void Rest()
         {
             bool canRest = player.Gold >= 500;
             bool rest = false;
