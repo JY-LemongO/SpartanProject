@@ -33,7 +33,7 @@ namespace RtanTextDungeon
                 Console.ResetColor();
 
                 Console.WriteLine("-------------------------------------------\n");
-                Console.WriteLine("(E) : [상태]\n\n(I) : [인벤토리]\n\n(S) : [상점]\n\n(D) : [던전입장]\n\n(R) : [휴식]\n\n(X) : [게임종료]\n");
+                Console.WriteLine("(E) : [상태]\n\n(I) : [인벤토리]\n\n(S) : [상점]\n\n(D) : [던전입장]\n\n(R) : [휴식]\n\n(X) : [게임종료] (게임저장)\n");
                 Console.WriteLine("-------------------------------------------\n");
 
                 Console.ForegroundColor = ConsoleColor.Cyan;
@@ -416,7 +416,7 @@ namespace RtanTextDungeon
 
             int[] recommendDEF = [ 10, 25, 70 ];
             int[] rewards = [ 500, 1500, 2500 ];
-            int[] exp = [300, 15, 50];
+            int[] exp = [5, 15, 50];
             string[] difficulties = { "쉬움", "보통", "어려움" };
 
             int randomDamage = new Random().Next(20, 36);
@@ -495,6 +495,7 @@ namespace RtanTextDungeon
         #region 휴식
         private void Rest(Player player)
         {
+            bool canRest = player.Gold >= 500;
             bool rest = false;
             bool fullCondition = player.Hp == player.MaxHp;
             while (true)
@@ -523,10 +524,19 @@ namespace RtanTextDungeon
                     }
                     else
                     {
-                        Console.ForegroundColor = ConsoleColor.Green;
-                        Console.WriteLine($"회복되었습니다!\n");
-                        Console.ResetColor();
-                        fullCondition = true;
+                        if (canRest)
+                        {
+                            Console.ForegroundColor = ConsoleColor.Green;
+                            Console.WriteLine($"회복되었습니다!\n");
+                            Console.ResetColor();
+                            fullCondition = true;
+                        }
+                        else
+                        {
+                            Console.ForegroundColor = ConsoleColor.DarkRed;
+                            Console.WriteLine($"숙박 비용이 모자랍니다!\n");
+                            Console.ResetColor();
+                        }
                     }
                 }
 
@@ -546,10 +556,11 @@ namespace RtanTextDungeon
                     case "R":
                     case "r":
                         rest = true;
-                        if (!fullCondition)
+                        canRest = player.Gold >= 500;
+                        if (!fullCondition && canRest)
                         {
                             player.Rest();
-                            player.GetGold(-500);
+                            player.GetGold(-500);                            
                         }
                         break;
                     case "B":

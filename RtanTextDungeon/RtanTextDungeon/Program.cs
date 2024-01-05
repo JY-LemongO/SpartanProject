@@ -78,7 +78,7 @@ namespace RtanTextDungeon
             else
             {
                 Console.WriteLine("데이터가 없습니다.");
-                return new Player(1, "르탄이", Define.PlayerClass.Worrior, 10, 5, 100, 100, 50000);
+                return new Player(1, "르탄이", Define.PlayerClass.Worrior, 10, 5, 100, 100, 1500);
             }                
         }
         
